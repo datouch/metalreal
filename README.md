@@ -1,3 +1,2 @@
 Metalreal is written in Python using Flask.
-This project just started.
-=========
+>This project just started.
