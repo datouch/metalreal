@@ -18,7 +18,7 @@ def admin_index():
 
 @app.route('/admin/chapters/new')
 def admin_chapter_new():
-    return render_template('admin/chapter.new.html')
+    return render_template('admin/chapters/new.html')
 
 @app.route('/admin/login/', methods=['GET', 'POST'])
 def admin_login():

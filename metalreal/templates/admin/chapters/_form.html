@@ -1,0 +1,10 @@
+{% import "macro.html" as f %}
+
+{% macro form(chapter=None) %}
+<div>
+    <form method='post' >
+        {{ f.input('title', value='AMO') }}
+        {{ f.textarea('text', value="HAH") }}
+    </form>
+</div>
+{% endmacro %}

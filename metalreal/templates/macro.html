@@ -1,0 +1,29 @@
+{% macro input_tag(name, type="text") %}
+<input name='{{name}}' type='{{type}}' {% for key in kwargs %}{{key}}='{{kwargs[key]}}'{% endfor %} />
+{% endmacro %}
+
+{% macro textarea_tag(name, value="") %}
+<textarea name='{{name}}' {% for key in kwargs %}{{key}}='{{kwargs[key]}}'{% endfor %} >{{value}}</textarea>
+{% endmacro %}
+
+{% macro label(name, title) %}
+<label for='{{name}}' {% for key in kwargs %}{{key}}='{{kwargs[key]}}'{% endfor %} >{{title if title != "" else name|capitalize()}}</label>
+{% endmacro %}
+
+{#
+    Below macros are wrapped with <div>
+#}
+
+{% macro input(name, type="text") %}
+<div class='group' >
+    {{ label(name, kwargs['title']|capitalize()) }}
+    {{ input_tag(name, type, **kwargs) }}
+</div>
+{% endmacro %}
+
+{% macro textarea(name) %}
+<div class='group' >
+    {{ label(name, kwargs['title']|capitalize()) }}
+    {{ textarea_tag(name, kwargs['value']) }}
+</div>
+{% endmacro %}
