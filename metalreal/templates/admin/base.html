@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% block navigation %}
+    <div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('admin_index') }}" >Chapters</a></li>
+                <li>Questions</li>
+                <li>Quiz</li>
+                <li>Feedback</li>
+                <li><a href="{{ url_for('admin_logout') }}" >Logout</a></li>
+            </ul>
+        </nav> 
+    </div>
+    {% endblock %}
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    <footer id="footer">
+    </footer>
+</body>
