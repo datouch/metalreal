@@ -1,3 +1,11 @@
+{% macro select_tag(name, options, default=None) %}
+<select name='{{name}}' {% for key in kwargs %}{{key}}='{{kwargs[key]}}'{% endfor %} >
+    {% for item in options %}
+    <option value='{{item[0]}}' {% if item[0] == default %}selected='selected'{% endif %} >{{item[1] if item[1] is defined else item[0] }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
 {% macro input_tag(name, type="text") %}
 <input name='{{name}}' type='{{type}}' {% for key in kwargs %}{{key}}='{{kwargs[key]}}'{% endfor %} />
 {% endmacro %}
@@ -13,6 +21,13 @@
 {#
     Below macros are wrapped with <div>
 #}
+
+{% macro select(name, options, default=None) %}
+<div class='group'>
+    {{ label(name, kwargs['title']|capitalize()) }}
+    {{ select_tag(name, options, default) }}
+</div>
+{% endmacro %}
 
 {% macro input(name, type="text") %}
 <div class='group' >
