@@ -3,8 +3,9 @@
 {% macro form(chapter=None) %}
 <div>
     <form method='post' >
-        {{ f.input('title', value='AMO') }}
-        {{ f.textarea('text', value="HAH") }}
+        {{ f.input('title') }}
+        {{ f.textarea('text') }}
+        {{ f.button_tag('submit', 'Save')}}
     </form>
 </div>
 {% endmacro %}
