@@ -1,8 +1,8 @@
 {% macro select_tag(name, options, default=None) %}
 <select name='{{name}}' {% for key in kwargs %}{{key}}='{{kwargs[key]|safe}}'{% endfor %} >
-    {% for item in options %}
-    <option value='{{item[0]|safe}}' {% if item[0] == default %}selected='selected'{% endif %} >{{item[1] if item[1] is defined else item[0] }}</option>
-    {% endfor %}
+	{% for item in options %}
+	<option value='{{item[0]|safe}}' {% if item[0] == default %}selected='selected'{% endif %} >{{item[1] if item[1] is defined else item[0] }}</option>
+	{% endfor %}
 </select>
 {% endmacro %}
 
@@ -10,8 +10,8 @@
 <div class='checkboxs'>
 {% for item in options %}
 <div class='checkbox-group' >
-    {{ label(item[0], item[1]) }}
-    <input name='{{name}}[]' type='checkbox' value='{{item[0]}}' {% if item[0] in checked %}checked='checked'{% endif %} {% for key in kwargs %}{{key}}='{{kwargs[key]|safe}}'{% endfor %}/>
+	{{ label(item[0], item[1]) }}
+	<input name='{{name}}[]' type='checkbox' value='{{item[0]}}' {% if item[0] in checked %}checked='checked'{% endif %} {% for key in kwargs %}{{key}}='{{kwargs[key]|safe}}'{% endfor %}/>
 </div>
 {% endfor %}
 </div>
@@ -21,8 +21,8 @@
 <div class='radios' >
 {% for item in options %}
 <div class='radio-group' >
-    {{ label(item[0], item[1]) }}
-    <input name='{{name}}[]' type='radio' value='{{item[0]}}' {% if item[0] == default %}checked='checked'{% endif %} {% for key in kwargs %}{{key}}='{{kwargs[key]|safe}}'{% endfor %}/>
+	{{ label(item[0], item[1]) }}
+	<input name='{{name}}[]' type='radio' value='{{item[0]}}' {% if item[0] == default %}checked='checked'{% endif %} {% for key in kwargs %}{{key}}='{{kwargs[key]|safe}}'{% endfor %}/>
 </div>
 {% endfor %}
 </div>
@@ -45,27 +45,27 @@
 {% endmacro %}
 
 {#
-    Below macros are wrapped with <div>
+	Below macros are wrapped with <div>
 #}
 
 {% macro select(name, options, default=None) %}
 <div class='group'>
-    {{ label(name, kwargs['title']) }}
-    {{ select_tag(name, options, default) }}
+	{{ label(name, kwargs['title']) }}
+	{{ select_tag(name, options, default) }}
 </div>
 {% endmacro %}
 
 {% macro input(name, type="text") %}
 <div class='group' >
-    {{ label(name, kwargs['title']) }}
-    {{ input_tag(name, type, **kwargs) }}
+	{{ label(name, kwargs['title']) }}
+	{{ input_tag(name, type, **kwargs) }}
 </div>
 {% endmacro %}
 
 {% macro textarea(name) %}
 <div class='group' >
-    {{ label(name, kwargs['title']) }}
-    {{ textarea_tag(name, kwargs['value']) }}
+	{{ label(name, kwargs['title']) }}
+	{{ textarea_tag(name, kwargs['value']) }}
 </div>
 {% endmacro %}
 % endmacro %}

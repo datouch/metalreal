@@ -1,11 +1,31 @@
-{% import "macro.html" as f %}
-
 {% macro form(chapter=None) %}
 <div>
-    <form method='post' >
-        {{ f.input('title') }}
-        {{ f.textarea('text') }}
-        {{ f.button_tag('submit', 'Save')}}
-    </form>
+	<form method='post' class="form-horizontal" >
+		<legend>Create new chapter</legend>
+		<div class="control-group">
+			<label class="control-label" for="title" >Title</label>
+			<div class="controls" >
+				<input type="text" name="title" class="span3" />
+				<p class="help-inline" >Chapter's title</p>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="chapter_no" >Chapter number</label>
+			<div class="controls" >
+				<input type="text" name="chapter_no" class="span3" />
+				<p class="help-inline" >e.g <strong>1.1</strong>, <strong>2.1.1</strong></p>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="content" >Content</label>
+			<div class="controls" >
+				<textarea name="content" class="span7" rows="13" ></textarea>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary btn-large" type="submit" >Save</button>
+			<button class="btn btn-large" type="submit" >Cancel</button>
+		</div>
+	</form>
 </div>
 {% endmacro %}

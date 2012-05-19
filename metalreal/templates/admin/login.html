@@ -4,13 +4,25 @@
 
 {% block navigation %}
 {% endblock %}
-
 {% block content %}
-<div>
-    <form method='post' >
-        <input type='text' name='username' />
-        <input type='password' name='password' />
-        <button type='submit' >Login</button>
-    </form}>
+<div class="login-form" >
+	<h1>Login</h1>
+	<form method="post" class="form-horizontal" >
+		<div class="control-group">
+			<label class="control-label" for="username" >Username</label>
+			<div class="controls" >
+				<input type="text" name="username" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="password" >Password</label>
+			<div class="controls" >
+				<input type="password" name="password" />
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary btn-large" type="submit" >Login</button>
+		</div>
+	</form}>
 </div>
 {% endblock %}

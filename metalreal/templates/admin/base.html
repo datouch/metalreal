@@ -1,26 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}{% endblock %}</title>
-    {% block head %}{% endblock %}
+	<title>{% block title %}{% endblock %}</title>
+	{% block head %}{% endblock %}
+	<script type="text/javascript" src="/static/js/jquery.min.js" ></script>
+	<script type="text/javascript" src="/static/bootstrap/js/bootstrap.js" ></script>
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.css">
 </head>
 <body>
-    {% block navigation %}
-    <div>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('admin_index') }}" >Chapters</a></li>
-                <li>Questions</li>
-                <li>Quiz</li>
-                <li>Feedback</li>
-                <li><a href="{{ url_for('admin_logout') }}" >Logout</a></li>
-            </ul>
-        </nav> 
-    </div>
-    {% endblock %}
-    <div id="content">
-        {% block content %}{% endblock %}
-    </div>
-    <footer id="footer">
-    </footer>
+	<div class="container" >
+		<div class="navbar">
+			<nav class="navbar-inner">
+				<div class="container">
+					<a href="#" class="brand" >Metalreal</a>
+					<ul class="nav" >
+						<li {{ unescape('class="active"') if 'chapter' in area.split('/') }} >
+							<a href="{{ url_for('admin_index') }}" >Chapters</a>
+						</li>
+						<li {{ unescape('class="active"') if 'question' in area.split('/') }} ><a href="#" >Questions</a></li>
+						<li {{ unescape('class="active"') if 'quiz' in area.split('/') }} ><a href="#" >Quiz</a></li>
+						<li {{ unescape('class="active"') if 'feedback' in area.split('/') }} ><a href="#" >Feedback</a></li>
+					</ul >
+					<ul class="nav pull-right" >
+						<li><a href="{{ url_for('admin_logout') }}" >Logout</a></li>
+					</ul>
+				</div>
+			</nav> 
+		</div>
+		<div class="row" >
+			<div id="side-bar" class="span3">
+				<ul class="nav nav-list well">
+					<li class="nav-header">Actions</li>
+					<li {{ unescape('class="active"') if area == 'chapter' }} >
+						<a href="{{ url_for('admin_index') }}">
+							<i class="icon-book"></i>
+							Chapter List
+						</a>
+					</li>
+					<li {{ unescape('class="active"') if area == 'chapter/new' }} >
+						<a href="{{ url_for('admin_chapter_new') }}" >
+							<i class="icon-pencil"></i>
+							Create new chapter
+						</a>
+					</li>
+				</ul>
+				{% if area == 'chapter' %}
+				{% elif area == 'question' %}
+
+				{% elif area == 'quiz' %}
+
+				{% elif area == 'feedback' %}
+
+				{% endif %}
+			</div>
+			<div id="content" class="span9">
+				{% block content %}{% endblock %}
+			</div>
+		</div>
+		<footer id="footer">
+		</footer>
+	</div>
 </body>
+</html>
