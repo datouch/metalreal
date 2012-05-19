@@ -1,6 +1,31 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Chapter{% endblock %}
+{% block title %}Chapters{% endblock %}
 
 {% block content %}
+<h2>All Chapters</h2>
+<hr>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Chapter No.</th>
+      <th>Title</th>
+      <th>Last update</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for chapter in chapters %}
+    <tr>
+      <td>{{ chapter.chapter_id }}</td>
+      <td>{{ chapter.title }}</td>
+      <td>{{ chapter.updated_at.strftime('%Y-%m-%d %R') }}</td>
+      <td>
+      	<a class="btn btn-info btn-mini" href="#" ><i class="icon-edit icon-white"></i> Edit</a>
+      	<a class="btn btn-danger btn-mini" href="#" ><i class="icon-trash icon-white"></i> Delete</a>
+      </td>
+    </tr>
+   	{% endfor %}
+  </tbody>
+</table>
 {% endblock %}

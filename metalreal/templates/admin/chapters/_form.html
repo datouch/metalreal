@@ -5,21 +5,28 @@
 		<div class="control-group">
 			<label class="control-label" for="title" >Title</label>
 			<div class="controls" >
-				<input type="text" name="title" class="span3" />
+				<input type="text" name="title" class="span3" value="{{ chapter.title if chapter is defined and chapter.title is defined  }}" />
 				<p class="help-inline" >Chapter's title</p>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="chapter_no" >Chapter number</label>
+			<label class="control-label" for="chapter_id" >Chapter number</label>
 			<div class="controls" >
-				<input type="text" name="chapter_no" class="span3" />
+				<input type="text" name="chapter_id" class="span3" value="{{ chapter.chapter_id if chapter is defined and chapter.chapter_id is defined  }}" />
 				<p class="help-inline" >e.g <strong>1.1</strong>, <strong>2.1.1</strong></p>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="required_chapter" >Required chapter</label>
+			<div class="controls" >
+				<input type="text" name="required_chapter" class="span3" />
+				<p class="help-inline" >chapter's title or number</p>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="content" >Content</label>
 			<div class="controls" >
-				<textarea name="content" class="span7" rows="13" ></textarea>
+				<textarea name="content" class="span7" rows="13" >{{ chapter.content if chapter is defined and chapter.content is defined  }}</textarea>
 			</div>
 		</div>
 		<div class="form-actions">
