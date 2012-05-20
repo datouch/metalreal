@@ -74,6 +74,48 @@ def admin_chapter_new():
 
 			return render_template('admin/chapters/new.html', area='chapter/new', unescape=unescape, chapter=request.form )
 
+@app.route('/admin/chapters/edit/<string:chapter_id>', methods=['GET', 'POST'])
+@require_admin_auth
+def admin_chapter_edit(chapter_id):
+	if request.method == 'GET':
+		chapter =  Chapters.select().where(Chapters.c.chapter_id==chapter_id).execute().fetchone()
+		return render_template('admin/chapters/edit.html', area='chapter/edit', unescape=unescape, chapter=chapter)
+	else:
+		update_query = Chapters.update().values(chapter_id=request.form['chapter_id'],
+																						title=request.form['title'],
+																						content=request.form['content']
+																						).where(Chapters.c.chapter_id==chapter_id)
+		try:
+			if request.form['title'] == '' or request.form['content'] == '':
+				raise
+			update_query.execute()
+			flash('Chapter has been updated', 'success')
+			return redirect(url_for('admin_index'))
+		except Exception, e:
+			# Add flash by checking all possible cause that raise the exception
+			print e
+			if request.form['title'] == '':
+				flash("Title can't be blank", 'error')
+
+			if request.form['content'] == '':
+				flash("Content can't be blank", 'error')
+
+			if 'chapters_pkey' in e.message:
+				flash('Chapter number is duplicate', 'error')
+
+			return render_template('admin/chapters/new.html', area='chapter/new', unescape=unescape, chapter=request.form )
+
+@app.route('/admin/chapters/delete/<string:chapter_id>')
+@require_admin_auth
+def admin_chapter_delete(chapter_id):
+	try:
+		Chapters.delete().where(Chapters.c.chapter_id == chapter_id).execute()
+		flash('Chapter was deleted')
+	except Exception:
+		flash('Unable to delete chapter')
+		return redirect(url_for('admin_index'))
+	return redirect(url_for('admin_index'))
+
 @app.route('/admin/login/', methods=['GET', 'POST'])
 def admin_login():
 	if 'admin' in session and session['admin'] == 'admin':

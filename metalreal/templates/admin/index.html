@@ -21,8 +21,8 @@
       <td>{{ chapter.title }}</td>
       <td>{{ chapter.updated_at.strftime('%Y-%m-%d %R') }}</td>
       <td>
-      	<a class="btn btn-info btn-mini" href="#" ><i class="icon-edit icon-white"></i> Edit</a>
-      	<a class="btn btn-danger btn-mini" href="#" ><i class="icon-trash icon-white"></i> Delete</a>
+      	<a class="btn btn-info btn-mini" href="{{ url_for('admin_chapter_edit', chapter_id=chapter.chapter_id) }}" ><i class="icon-edit icon-white"></i> Edit</a>
+      	<a class="btn btn-danger btn-mini" href="{{ url_for('admin_chapter_delete', chapter_id=chapter.chapter_id) }}" ><i class="icon-trash icon-white"></i> Delete</a>
       </td>
     </tr>
    	{% endfor %}
