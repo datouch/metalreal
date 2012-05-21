@@ -26,12 +26,28 @@
 		<div class="control-group">
 			<label class="control-label" for="content" >Content</label>
 			<div class="controls" >
-				<textarea name="content" class="span7" rows="13" >{{ chapter.content if chapter is defined and chapter.content is defined  }}</textarea>
+				<div class="tabbable" >
+					<ul class="nav nav-tabs" >
+						<li class="active" ><a href="#editorTab">Editor</a></li>
+						<li><a href="#previewTab">Preview</a></li>
+						<li><a href="#syntaxTab">Markdown Syntax</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="editorTab" >
+							<textarea name="content" class="span7" rows="13" >{{ chapter.content if chapter is defined and chapter.content is defined  }}</textarea>
+						</div>
+						<div class="tab-pane" id="previewTab" >
+							<div id="previewArea" ></div>
+						</div>
+						<div class="tab-pane" id="syntaxTab" >
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="form-actions">
 			<button class="btn btn-primary btn-large" type="submit" >Save</button>
-			<button class="btn btn-large" type="submit" >Cancel</button>
+			<a class="btn btn-large" href="{{ url_for('admin_index') }}" >Cancel</a>
 		</div>
 	</form>
 </div>

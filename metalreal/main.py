@@ -9,6 +9,7 @@ from sqlalchemy.dialects.postgresql import \
     DOUBLE_PRECISION, ENUM, FLOAT, INET, INTEGER, INTERVAL, \
     MACADDR, NUMERIC, REAL, SMALLINT, TEXT, TIME, TIMESTAMP, \
     UUID, VARCHAR
+import markdown
 
 unescape=Markup
 
@@ -115,6 +116,13 @@ def admin_chapter_delete(chapter_id):
 		flash('Unable to delete chapter')
 		return redirect(url_for('admin_index'))
 	return redirect(url_for('admin_index'))
+
+@app.route('/markdown_process', methods=['POST'])
+def markdown_process():
+	if request.is_xhr and 'markdown' in request.form:
+		return markdown.markdown(request.form['markdown'])
+	else:
+		return ""
 
 @app.route('/admin/login/', methods=['GET', 'POST'])
 def admin_login():
