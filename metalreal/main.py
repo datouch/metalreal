@@ -112,8 +112,8 @@ def admin_chapter_edit(chapter_id):
 		try:
 			if request.form['title'] == '' or request.form['content'] == '':
 				raise
+			RequiredChapters.delete().where(RequiredChapters.c.chapter_id == chapter_id).execute()
 			update_query.execute()
-			RequiredChapters.delete().where(RequiredChapters.c.chapter_id == '1.5').execute()
 			if('required_chapters[]' in request.form):
 				for required_chapter in request.form.getlist('required_chapters[]'):
 					RequiredChapters.insert().values(chapter_id=request.form['chapter_id'],
