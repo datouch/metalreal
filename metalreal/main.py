@@ -26,8 +26,8 @@ Chapters = Table('chapters', metadata,
 		Column('updated_at', TIMESTAMP, default='NOW', onupdate='NOW')
 	)
 RequiredChapters = Table('required_chapters', metadata,
-		Column('chapter_id', None, ForeignKey('chapters.chapter_id'), primary_key=True),
-		Column('required_id', None, ForeignKey('chapters.chapter_id'), primary_key=True)
+		Column('chapter_id', None, ForeignKey('chapters.chapter_id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True),
+		Column('required_id', None, ForeignKey('chapters.chapter_id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
 	)
 
 metadata.create_all(engine)
