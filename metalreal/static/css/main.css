@@ -1,0 +1,17 @@
+#required_chapters {
+	margin: 10px;
+}
+
+#required_chapters div.required_chapters {
+	margin: 5px;
+}
+
+#required_chapters .required_chapters i {
+	display: none;
+}
+
+#required_chapters .required_chapters:hover i {
+	display: inline-block;
+	position: relative;
+	bottom: -1px;
+}

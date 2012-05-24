@@ -1567,6 +1567,10 @@
  * limitations under the License.
  * ============================================================ */
 
+ /* MODIFIED By Dollar Touch
+  * Just Add typeahead-complete
+  *-------------------------------------------------------------*/
+
 
 !function($){
 
@@ -1598,6 +1602,7 @@
       this.$element
         .val(this.updater(val))
         .change()
+      this.$element.trigger('typeahead-complete', val);
       return this.hide()
     }
 

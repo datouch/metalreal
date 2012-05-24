@@ -1,4 +1,4 @@
-{% macro form(chapter=None) %}
+{% macro form(chapter=None, chapters=[], required_chapters=None) %}
 <div>
 	<form method='post' class="form-horizontal" >
 		<legend>Create new chapter</legend>
@@ -19,8 +19,18 @@
 		<div class="control-group">
 			<label class="control-label" for="required_chapter" >Required chapter</label>
 			<div class="controls" >
-				<input type="text" name="required_chapter" class="span3" />
+				<input type="text" id="required_chapter" name="required_chapter" class="span3" data-provide="typeahead" autocomplete="off" />
 				<p class="help-inline" >chapter's title or number</p>
+				<div id="required_chapters">
+					{% if required_chapters is defined %}
+					{% for item in required_chapters %}
+						<input type='hidden' value='{{ item.split(' ')[0] }}' data-value='{{item}}'  name='required_chapters[]' />
+						<div title='click to remove' class='required_chapters btn btn-info' data-value='{{item}}' >
+							{{item}} 
+							<i class='icon-trash icon-white'></i></div>
+					{% endfor %}
+					{% endif %}
+				</div>
 			</div>
 		</div>
 		<div class="control-group">
@@ -34,6 +44,17 @@
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane active" id="editorTab" >
+							<div class="btn-group">
+								<div class="btn" ><i class='icon-plus' title="List"></i></div>
+								<div class="btn" ><i class='icon-minus' title="List"></i></div>
+								<div class="btn" id="make-bold"><i class='icon-bold' title="Bold" ></i></div>
+								<div class="btn" ><i class='icon-italic' title="Italic"></i></div>
+								<div class="btn" >__</div>
+								<div class="btn" ><i class='icon-list' title="List"></i></div>
+								<div class="btn" ><i class='icon-globe'></i> Link</div>
+								<div class="btn" ><i class='icon-question-sign' title="Qustion"></i> Question</div>
+								<div class="btn" ><i class='icon-check' title="Qustion"></i> Quiz</div>
+							</div>
 							<textarea name="content" class="span7" rows="13" >{{ chapter.content if chapter is defined and chapter.content is defined  }}</textarea>
 						</div>
 						<div class="tab-pane" id="previewTab" >
@@ -51,4 +72,10 @@
 		</div>
 	</form>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+	source = [{% for item in chapters -%}"{{ item }}"{{ ', ' if not loop.last }}{%- endfor %}];
+	$('#required_chapter').typeahead({source: source});
+});
+</script>
 {% endmacro %}
