@@ -36,10 +36,11 @@ $(document).ready(function(){
   });
 
   $('#required_chapter').on('typeahead-complete', function(e, val){
-    if($('#required_chapters').find('input[value="'+val.split(' ')[0]+'"]').length == 0){
-      var html = "<input type='hidden' value='"+val.split(' ')[0]+
-                  "' data-value='"+val+"'  name='required_chapters[]' /><div title='click to remove' class='required_chapters btn btn-info' data-value='"+val+
-                  "' >"+val+" <i class='icon-trash icon-white'></i></div>"
+    if($('#required_chapters').find('input[value="' + val.split(' ')[0] + '"]').length == 0){
+      var html = "<input type='hidden' value='" + val.split(' ')[0] +
+                  "' data-value='" + val + "'  name='required_chapters[]' />" +
+                  "<div title='click to remove' class='required_chapters btn btn-info' data-value='"+
+                  val + "' >" + val + " <i class='icon-trash icon-white'></i></div>"
       $('#required_chapters').append(html).find('div').tooltip();
     }
     $('#required_chapter').val('');
