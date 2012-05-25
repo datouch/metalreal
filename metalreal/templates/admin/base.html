@@ -1,79 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>{% block title %}{% endblock %}</title>
-	{% block head %}{% endblock %}
-	<script type="text/javascript" src="/static/js/jquery.min.js" ></script>
-	<script type="text/javascript" src="/static/bootstrap/js/bootstrap.js" ></script>
-	<script type="text/javascript" src="/static/js/main_admin.js" ></script>
-	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
-	<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>{% block title %}{% endblock %}</title>
+  {% block head %}{% endblock %}
+  <script type="text/javascript" src="/static/js/jquery.min.js" ></script>
+  <script type="text/javascript" src="/static/bootstrap/js/bootstrap.js" ></script>
+  <script type="text/javascript" src="/static/js/main_admin.js" ></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.css">
 </head>
 <body>
-	<div class="container" >
-		<div class="navbar">
-			<nav class="navbar-inner">
-				<div class="container">
-					<a href="#" class="brand" >Metalreal</a>
-					<ul class="nav" >
-						<li {{ unescape('class="active"') if 'chapter' in area }} >
-							<a href="{{ url_for('admin_index') }}" >Chapters</a>
-						</li>
-						<li {{ unescape('class="active"') if 'question' in area }} ><a href="#" >Questions</a></li>
-						<li {{ unescape('class="active"') if 'quiz' in area }} ><a href="#" >Quiz</a></li>
-						<li {{ unescape('class="active"') if 'feedback' in area }} ><a href="#" >Feedback</a></li>
-					</ul >
-					<ul class="nav pull-right" >
-						<li><a href="{{ url_for('admin_logout') }}" >Logout</a></li>
-					</ul>
-				</div>
-			</nav> 
-		</div>
-		<div class="row" >
-			<div id="side-bar" class="span3">
-				<ul class="nav nav-list well">
-					<li class="nav-header">Actions</li>
-					{% if 'chapter' in area %}
-					<li {{ unescape('class="active"') if area == 'chapter' }} >
-						<a href="{{ url_for('admin_index') }}">
-							<i class="icon-book"></i>
-							Chapter List
-						</a>
-					</li>
-					<li {{ unescape('class="active"') if area == 'chapter/new' }} >
-						<a href="{{ url_for('admin_chapter_new') }}" >
-							<i class="icon-pencil"></i>
-							Create new chapter
-						</a>
-					</li>
-					{% elif area == 'question' %}
+  <div class="container" >
+    <div class="navbar">
+      <nav class="navbar-inner">
+        <div class="container">
+          <a href="#" class="brand" >Metalreal</a>
+          <ul class="nav" >
+            <li {{ unescape('class="active"') if 'chapter' in area }} >
+              <a href="{{ url_for('admin_index') }}" >Chapters</a>
+            </li>
+            <li {{ unescape('class="active"') if 'question' in area }} ><a href="#" >Questions</a></li>
+            <li {{ unescape('class="active"') if 'quiz' in area }} ><a href="#" >Quiz</a></li>
+            <li {{ unescape('class="active"') if 'feedback' in area }} ><a href="#" >Feedback</a></li>
+          </ul >
+          <ul class="nav pull-right" >
+            <li><a href="{{ url_for('admin_logout') }}" >Logout</a></li>
+          </ul>
+        </div>
+      </nav> 
+    </div>
+    <div class="row" >
+      <div id="side-bar" class="span3">
+        <ul class="nav nav-list well">
+          <li class="nav-header">Actions</li>
+          {% if 'chapter' in area %}
+          <li {{ unescape('class="active"') if area == 'chapter' }} >
+            <a href="{{ url_for('admin_index') }}">
+              <i class="icon-book"></i>
+              Chapter List
+            </a>
+          </li>
+          <li {{ unescape('class="active"') if area == 'chapter/new' }} >
+            <a href="{{ url_for('admin_chapter_new') }}" >
+              <i class="icon-pencil"></i>
+              Create new chapter
+            </a>
+          </li>
+          {% elif area == 'question' %}
 
-					{% elif area == 'quiz' %}
+          {% elif area == 'quiz' %}
 
-					{% elif area == 'feedback' %}
+          {% elif area == 'feedback' %}
 
-					{% endif %}
-				</ul>
-			</div>
-			<div id="content" class="span9">
-				{% with messages = get_flashed_messages(with_categories=true) %}
-				  {% if messages %}
-				    <div class="flashes">
-				    {% for category, message in messages %}
-				      <div class="alert alert-{{ category }}">
-				      	<button class="close" data-dismiss="alert">×</button>
-				      	<strong>{{ message }}</strong>
-				      </div>
-				    {% endfor %}
-				    </div>
-				  {% endif %}
-				{% endwith %}
-				{% block content %}{% endblock %}
-			</div>
-		</div>
-		<footer id="footer">
-		</footer>
-	</div>
+          {% endif %}
+        </ul>
+      </div>
+      <div id="content" class="span9">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flashes">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                <button class="close" data-dismiss="alert">×</button>
+                <strong>{{ message }}</strong>
+              </div>
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    <footer id="footer">
+    </footer>
+  </div>
 </body>
 </html>
