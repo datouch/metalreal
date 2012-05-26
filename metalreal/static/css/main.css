@@ -15,3 +15,7 @@
   position: relative;
   bottom: -1px;
 }
+
+#question-modal form {
+  margin: 0;
+}

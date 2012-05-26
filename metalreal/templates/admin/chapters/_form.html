@@ -52,7 +52,9 @@
                 <div class="btn" >__</div>
                 <div class="btn" ><i class='icon-list' title="List"></i></div>
                 <div class="btn" ><i class='icon-globe'></i> Link</div>
-                <div class="btn" ><i class='icon-question-sign' title="Qustion"></i> Question</div>
+                <div class="btn" data-toggle="modal" id="add-question">
+                  <i class='icon-question-sign' title="Qustion"></i> Question
+                </div>
                 <div class="btn" ><i class='icon-check' title="Qustion"></i> Quiz</div>
               </div>
               <textarea name="content" class="span7" rows="13" >{{ chapter.content if chapter is defined and chapter.content is defined  }}</textarea>
@@ -69,6 +71,52 @@
     <div class="form-actions">
       <button class="btn btn-primary btn-large" type="submit" >Save</button>
       <a class="btn btn-large" href="{{ url_for('admin_index') }}" >Cancel</a>
+    </div>
+  </form>
+</div>
+<div class="modal fade" id="question-modal">
+  <form class="form-horizontal" action="{{ url_for('admin_question_new') }}" method="post" >
+    <div class="modal-header">
+      <button class="close" data-dismiss="modal">×</button>
+      <h3>Add Question</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+          <label class="control-label" for="chapter_id" >Question</label>
+          <div class="controls" >
+            <input type="text" name="question" class="span3" value="" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="chapter_id" >Answer</label>
+          <div class="controls" >
+            <input type="text" name="answer" class="span3" value="" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="chapter_id" >Type</label>
+          <div class="controls" >
+            <label class="radio">
+              <input type="radio" name="type" value="1" checked/>
+              Textbox
+            </label>
+            <label class="radio">
+              <input type="radio" name="type" value="2" />
+              Textarea
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="chapter_id" >Hint</label>
+          <div class="controls" >
+            <input type="text" name="hint" class="span3" value="" />
+          </div>
+        </div>
+        <input type="hidden" name="chapter_id" value="{{ chapter.chapter_id if chapter is defined }}" />
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" data-dismiss="modal" >Cancel</a>
+      <button href="#" class="btn btn-primary">Save</button>
     </div>
   </form>
 </div>

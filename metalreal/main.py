@@ -1,6 +1,6 @@
 from metalreal import app
-from metalreal.database import engine, Chapter
-from flask import session, redirect, url_for, render_template, request, flash
+from metalreal.database import engine, Chapter, Question
+from flask import session, redirect, url_for, render_template, request, flash, jsonify
 from jinja2 import Markup
 from sqlalchemy.orm import sessionmaker
 import markdown
@@ -62,6 +62,8 @@ def admin_chapter_new():
       flash('Chapter was created', 'success')
       return redirect(url_for('admin_index'))
     except Exception, e:
+      # Roll transaction in sqlalchemy.session back
+      sess.rollback()
       # Add flash by checking all possible cause that raise the exception
       if request.form['title'] == '':
         flash("Title can't be blank", 'error')
@@ -74,8 +76,6 @@ def admin_chapter_new():
         # so we raise it if we don't know what it is
         raise e
 
-      # Roll transaction in sqlalchemy.session back
-      sess.rollback()
       return render_template('admin/chapters/new.html',
                             area='chapter/new', 
                             unescape=unescape,
@@ -127,6 +127,8 @@ def admin_chapter_edit(chapter_id):
       flash('Chapter has been updated', 'success')
       return redirect(url_for('admin_index'))
     except Exception, e:
+      # Roll the transaction back
+      sess.rollback()
       # Add flash by checking all possible cause that raise the exception
       if request.form['title'] == '':
         flash("Title can't be blank", 'error')
@@ -139,8 +141,6 @@ def admin_chapter_edit(chapter_id):
         # so we raise it if we don't know what it is
         raise e
 
-      # Roll the transaction back
-      sess.rollback()
       # Render a template with previous form data is filled
       return render_template('admin/chapters/edit.html',
                             area='chapter/new',
@@ -163,6 +163,63 @@ def admin_chapter_delete(chapter_id):
     sess.rollback()
     flash('Unable to delete chapter')
     return redirect(url_for('admin_index'))
+
+@app.route('/admin/questions/')
+@require_admin_auth
+def admin_question_index():
+  sess = Session()
+  questions = sess.query(Question).all()
+  return render_template('admin/questions/index.html',
+                         area='question',
+                         questions=questions,
+                         unescape=unescape)
+
+@app.route('/admin/questions/new', methods=['POST'])
+@require_admin_auth
+def admin_question_new():
+  sess = Session()
+  try:
+    question = Question(request.form['question'],
+                        request.form['answer'],
+                        request.form['type'],
+                        request.form['hint'])
+    chapter = sess.query(Chapter).filter_by(chapter_id=request.form['chapter_id']).first()
+    question.chapter = chapter
+    sess.add(question)
+    sess.commit()
+    if request.is_xhr:
+      json_item = jsonify(id=question.id,
+                          question=question.question)
+      json_item.status_code = 200
+      return json_item
+    else:
+      return redirect(url_for('admin_question_index'))
+  except Exception, e:
+    sess.rollback()
+    json_item = jsonify(message=e.message)
+    json_item.status_code = 500
+    return json_item
+
+@app.route('/admin/questions/edit/<int:id>')
+@require_admin_auth
+def admin_question_edit(id):
+  return ""
+
+@app.route('/admin/questions/delete/<int:id>')
+@require_admin_auth
+def admin_question_delete(id):
+  sess = Session()
+  try:
+    question = sess.query(Question).filter_by(id=id).first()
+    sess.delete(question)
+    sess.commit()
+    flash('Question was deleted')
+    return redirect(url_for('admin_question_index'))
+  except Exception, e:
+    sess.rollback()
+    flash('Unable to delete question')
+    return redirect(url_for('admin_question_index'))
+
 
 @app.route('/markdown_process', methods=['POST'])
 def markdown_process():

@@ -20,7 +20,9 @@
             <li {{ unescape('class="active"') if 'chapter' in area }} >
               <a href="{{ url_for('admin_index') }}" >Chapters</a>
             </li>
-            <li {{ unescape('class="active"') if 'question' in area }} ><a href="#" >Questions</a></li>
+            <li {{ unescape('class="active"') if 'question' in area }} >
+              <a href="{{ url_for('admin_question_index') }}" >Questions</a>
+            </li>
             <li {{ unescape('class="active"') if 'quiz' in area }} ><a href="#" >Quiz</a></li>
             <li {{ unescape('class="active"') if 'feedback' in area }} ><a href="#" >Feedback</a></li>
           </ul >
@@ -48,7 +50,12 @@
             </a>
           </li>
           {% elif area == 'question' %}
-
+          <li {{ unescape('class="active"') if area == 'question' }} >
+            <a href="{{ url_for('admin_question_index') }}">
+              <i class="icon-book"></i>
+              Question List
+            </a>
+          </li>
           {% elif area == 'quiz' %}
 
           {% elif area == 'feedback' %}
@@ -57,18 +64,18 @@
         </ul>
       </div>
       <div id="content" class="span9">
+        <div class="flashes">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
-            <div class="flashes">
             {% for category, message in messages %}
               <div class="alert alert-{{ category }}">
                 <button class="close" data-dismiss="alert">×</button>
                 <strong>{{ message }}</strong>
               </div>
             {% endfor %}
-            </div>
           {% endif %}
         {% endwith %}
+        </div>
         {% block content %}{% endblock %}
       </div>
     </div>

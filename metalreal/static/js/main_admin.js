@@ -55,4 +55,49 @@ $(document).ready(function(){
       e.preventDefault();
     }
   });
+
+  $('#add-question').click(function(){
+    if($('#question-modal form input[name="chapter_id"]').val() == ""){
+      var html =  '<div class="alert fade in alert-error">' +
+                    '<button class="close" data-dismiss="alert">×</button>' +
+                    '<strong>You have to save chapter first!</strong>' +
+                  '</div>';
+      $(html).appendTo('.flashes');
+      $('.alert').alert();
+    }
+    else {
+      $('#question-modal').modal();
+    }
+  });
+
+  $('#question-modal form').submit(function(e){
+    e.stopPropagation();
+    e.preventDefault();
+    $.ajax({ url: $(this).attr('action'), 
+             data: { question: $(this).find('input[name="question"]').val(),
+                     answer: $(this).find('input[name="answer"]').val(),
+                     type: $(this).find('input[name="type"]').val(),
+                     hint: $(this).find('input[name="hint"]').val(),
+                     chapter_id: $(this).find('input[name="chapter_id"]').val()}, 
+             type: 'POST',
+             dataType: 'json',
+             success: function(data){
+              $('#question-modal').modal('hide');
+              var html =  '<div class="alert fade in alert-success">' +
+                            '<button class="close" data-dismiss="alert">×</button>' +
+                            '<strong>' + data.question + ' created with ID: ' + data.id + '</strong>' +
+                          '</div>';
+              $(html).appendTo('.flashes');
+              $('.alert').alert();
+             },
+             error: function(){
+              var html =  '<div class="alert fade in alert-error">' +
+                            '<button class="close" data-dismiss="alert">×</button>' +
+                            '<strong>Unable to create new question!</strong>' +
+                          '</div>';
+              $(html).appendTo('.flashes');
+              $('.alert').alert();
+             }
+          });
+  });
 });
