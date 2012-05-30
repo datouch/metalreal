@@ -30,10 +30,7 @@ $(document).ready(function(){
     }
   });
 
-  $('#make-bold').click(function(){
-    var selection = window.getSelection();
-    console.log(selection.toString());
-  });
+  $('textarea').become_rich();
 
   $('#required_chapter').on('typeahead-complete', function(e, val){
     if($('#required_chapters').find('input[value="' + val.split(' ')[0] + '"]').length == 0){
@@ -45,10 +42,12 @@ $(document).ready(function(){
     }
     $('#required_chapter').val('');
   });
+
   $('#required_chapters').delegate('div', 'click', function(){
     $('#required_chapters').find('input[data-value="'+$(this).data('value')+'"]').remove();
     $(this).tooltip('hide').remove();
   });
+
   $('#required_chapter').keydown(function(e, val){
     if(e.keyCode == 13){
       e.stopPropagation();
@@ -56,7 +55,7 @@ $(document).ready(function(){
     }
   });
 
-  $('#add-question').click(function(){
+  $('.add-question').click(function(){
     if($('#question-modal form input[name="chapter_id"]').val() == ""){
       var html =  '<div class="alert fade in alert-error">' +
                     '<button class="close" data-dismiss="alert">×</button>' +
@@ -66,6 +65,7 @@ $(document).ready(function(){
       $('.alert').alert();
     }
     else {
+      window.question_target = $(this).parent().siblings('textarea')[0];
       $('#question-modal').modal();
     }
   });
@@ -82,6 +82,7 @@ $(document).ready(function(){
              type: 'POST',
              dataType: 'json',
              success: function(data){
+              var textarea = window.question_target;
               $('#question-modal').modal('hide');
               var html =  '<div class="alert fade in alert-success">' +
                             '<button class="close" data-dismiss="alert">×</button>' +
@@ -89,6 +90,7 @@ $(document).ready(function(){
                           '</div>';
               $(html).appendTo('.flashes');
               $('.alert').alert();
+              textarea.makeChange('question', data.id);
              },
              error: function(){
               var html =  '<div class="alert fade in alert-error">' +

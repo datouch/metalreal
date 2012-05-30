@@ -44,19 +44,6 @@
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="editorTab" >
-              <div class="btn-group">
-                <div class="btn" ><i class='icon-plus' title="List"></i></div>
-                <div class="btn" ><i class='icon-minus' title="List"></i></div>
-                <div class="btn" id="make-bold"><i class='icon-bold' title="Bold" ></i></div>
-                <div class="btn" ><i class='icon-italic' title="Italic"></i></div>
-                <div class="btn" >__</div>
-                <div class="btn" ><i class='icon-list' title="List"></i></div>
-                <div class="btn" ><i class='icon-globe'></i> Link</div>
-                <div class="btn" data-toggle="modal" id="add-question">
-                  <i class='icon-question-sign' title="Qustion"></i> Question
-                </div>
-                <div class="btn" ><i class='icon-check' title="Qustion"></i> Quiz</div>
-              </div>
               <textarea name="content" class="span7" rows="13" >{{ chapter.content if chapter is defined and chapter.content is defined  }}</textarea>
             </div>
             <div class="tab-pane" id="previewTab" >
