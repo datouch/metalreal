@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Edit Question{% endblock %}
+
+{% block content %}
+<div>
+  <form method='post' class="form-horizontal" >
+    <legend>Edit question</legend>
+      <div class="control-group">
+        <label class="control-label" for="chapter_id" >Question</label>
+        <div class="controls" >
+          <input type="text" name="question" class="span3" value="{{question.question}}" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="chapter_id" >Answer</label>
+        <div class="controls" >
+          <input type="text" name="answer" class="span3" value="{{question.answer}}" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="chapter_id" >Type</label>
+        <div class="controls" >
+          <label class="radio">
+            <input type="radio" name="type" value="1" {{ 'checked' if question.type|int == 1  }}/>
+            Textbox
+          </label>
+          <label class="radio">
+            <input type="radio" name="type" value="2" {{ 'checked' if question.type|int == 2  }}/>
+            Textarea
+          </label>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="chapter_id" >Hint</label>
+        <div class="controls" >
+          <input type="text" name="hint" class="span3" value="{{question.hint}}" />
+        </div>
+      </div>
+    <div class="form-actions">
+      <button class="btn btn-primary btn-large" type="submit" >Save</button>
+      <a class="btn btn-large" href="{{ url_for('admin_question_index') }}" >Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -76,7 +76,7 @@ $(document).ready(function(){
     $.ajax({ url: $(this).attr('action'), 
              data: { question: $(this).find('input[name="question"]').val(),
                      answer: $(this).find('input[name="answer"]').val(),
-                     type: $(this).find('input[name="type"]').val(),
+                     type: $(this).find('input:checked[name="type"]').val(),
                      hint: $(this).find('input[name="hint"]').val(),
                      chapter_id: $(this).find('input[name="chapter_id"]').val()}, 
              type: 'POST',

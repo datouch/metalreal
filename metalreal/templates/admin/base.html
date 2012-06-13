@@ -50,7 +50,7 @@
               Create new chapter
             </a>
           </li>
-          {% elif area == 'question' %}
+          {% elif 'question' in area %}
           <li {{ unescape('class="active"') if area == 'question' }} >
             <a href="{{ url_for('admin_question_index') }}">
               <i class="icon-book"></i>

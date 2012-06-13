@@ -2,9 +2,10 @@ from metalreal import app
 from metalreal.database import engine, Chapter, Question
 from flask import session, redirect, url_for, render_template, request, flash, jsonify
 from jinja2 import Markup
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, exc
 import markdown
 import metalreal.database
+import metalreal.error_pages
 
 unescape = Markup
 Session = sessionmaker(bind=engine)
@@ -54,7 +55,7 @@ def admin_chapter_new():
       if('required_chapters[]' in request.form):
         # Add required chapters
         for required_chapter in request.form.getlist('required_chapters[]'):
-          required = sess.query(Chapter).filter_by(chapter_id=required_chapter).first()
+          required = sess.query(Chapter).filter_by(chapter_id=required_chapter).one()
           new_chapter.required_chapters.append(required)
       # Add new chapter to sqlalchemy.session
       sess.add(new_chapter)
@@ -87,77 +88,85 @@ def admin_chapter_new():
 @require_admin_auth
 def admin_chapter_edit(chapter_id):
   sess = Session()
-  # Query for all chapters so it will be used as chapters that
-  # can be required
-  chapters_query = sess.query(Chapter.chapter_id,
-                              Chapter.title).filter(Chapter.chapter_id != chapter_id).all()
-  chapters = [ id + ' ' + title for id, title in chapters_query]
-  chapter = sess.query(Chapter).filter_by(chapter_id=chapter_id).first()
-  # Query required chapter of request chapter
-  required_chapters = [req.chapter_id + ' ' + req.title for req in chapter.required_chapters]
+  try:
+    # Query for all chapters so it will be used as chapters that
+    # can be required
+    chapters_query = sess.query(Chapter.chapter_id,
+                                Chapter.title).filter(Chapter.chapter_id != chapter_id).all()
+    chapters = [ id + ' ' + title for id, title in chapters_query]
+    chapter = sess.query(Chapter).filter_by(chapter_id=chapter_id).one()
+    # Query required chapter of request chapter
+    required_chapters = [req.chapter_id + ' ' + req.title for req in chapter.required_chapters]
 
-  if request.method == 'GET':
-    return render_template('admin/chapters/edit.html',
-                          area='chapter/edit',
-                          unescape=unescape,
-                          chapter=chapter,
-                          chapters=chapters,
-                          required_chapters=required_chapters)
-  else:
-    try:
-      # Update chapter data where chapter_id is matched
-      chapter.chapter_id=request.form['chapter_id']
-      chapter.title=request.form['title']
-      chapter.content=request.form['content']
-
-      # Raise an exception if title or content is empty
-      # NOTE: Have to be more specific
-      if (request.form['title'] == '') or (request.form['content'] == ''):
-        raise Exception()
-
-      if('required_chapters[]' in request.form):
-        required_list = []
-        # Add required chapter from the form
-        for required_chapter in request.form.getlist('required_chapters[]'):
-          required = sess.query(Chapter).filter_by(chapter_id=required_chapter).first()
-          required_list.append(required)
-        chapter.required_chapters = required_list
-      sess.add(chapter)
-      sess.commit()
-      flash('Chapter has been updated', 'success')
-      return redirect(url_for('admin_index'))
-    except Exception, e:
-      # Roll the transaction back
-      sess.rollback()
-      # Add flash by checking all possible cause that raise the exception
-      if request.form['title'] == '':
-        flash("Title can't be blank", 'error')
-      elif request.form['content'] == '':
-        flash("Content can't be blank", 'error')
-      elif 'chapters_pkey' in e.message:
-        flash('Chapter number is duplicate', 'error')
-      else:
-        # Because now an exception isn't specific
-        # so we raise it if we don't know what it is
-        raise e
-
-      # Render a template with previous form data is filled
+    if request.method == 'GET':
       return render_template('admin/chapters/edit.html',
-                            area='chapter/new',
-                            unescape=unescape, 
-                            chapter=request.form,
+                            area='chapter/edit',
+                            unescape=unescape,
+                            chapter=chapter,
                             chapters=chapters,
                             required_chapters=required_chapters)
+    else:
+      try:
+        # Update chapter data where chapter_id is matched
+        chapter.chapter_id=request.form['chapter_id']
+        chapter.title=request.form['title']
+        chapter.content=request.form['content']
+
+        # Raise an exception if title or content is empty
+        # NOTE: Have to be more specific
+        if (request.form['title'] == '') or (request.form['content'] == ''):
+          raise Exception()
+
+        if('required_chapters[]' in request.form):
+          required_list = []
+          # Add required chapter from the form
+          for required_chapter in request.form.getlist('required_chapters[]'):
+            required = sess.query(Chapter).filter_by(chapter_id=required_chapter).one()
+            required_list.append(required)
+          chapter.required_chapters = required_list
+        sess.add(chapter)
+        sess.commit()
+        flash('Chapter has been updated', 'success')
+        return redirect(url_for('admin_index'))
+      except Exception, e:
+        # Roll the transaction back
+        sess.rollback()
+        # Add flash by checking all possible cause that raise the exception
+        if request.form['title'] == '':
+          flash("Title can't be blank", 'error')
+        elif request.form['content'] == '':
+          flash("Content can't be blank", 'error')
+        elif 'chapters_pkey' in e.message:
+          flash('Chapter number is duplicate', 'error')
+        else:
+          # Because now an exception isn't specific
+          # so we raise it if we don't know what it is
+          raise e
+
+        # Render a template with previous form data is filled
+        return render_template('admin/chapters/edit.html',
+                              area='chapter/edit',
+                              unescape=unescape, 
+                              chapter=request.form,
+                              chapters=chapters,
+                              required_chapters=required_chapters)
+  except exc.NoResultFound, e:
+    flash('Unable to find given chapter id')
+    return redirect(url_for('admin_index'))
 
 @app.route('/admin/chapters/delete/<string:chapter_id>')
 @require_admin_auth
 def admin_chapter_delete(chapter_id):
   sess = Session()
   try:
-    chapter = sess.query(Chapter).filter_by(chapter_id=chapter_id).first()
+    chapter = sess.query(Chapter).filter_by(chapter_id=chapter_id).one()
     sess.delete(chapter)
     sess.commit()
     flash('Chapter was deleted')
+    return redirect(url_for('admin_index'))
+  except exc.NoResultFound, e:
+    sess.rollback()
+    flash('Unable to find given chapter id')
     return redirect(url_for('admin_index'))
   except Exception, e:
     sess.rollback()
@@ -168,7 +177,7 @@ def admin_chapter_delete(chapter_id):
 @require_admin_auth
 def admin_question_index():
   sess = Session()
-  questions = sess.query(Question).all()
+  questions = sess.query(Question).order_by(Question.id).all()
   return render_template('admin/questions/index.html',
                          area='question',
                          questions=questions,
@@ -183,7 +192,7 @@ def admin_question_new():
                         request.form['answer'],
                         request.form['type'],
                         request.form['hint'])
-    chapter = sess.query(Chapter).filter_by(chapter_id=request.form['chapter_id']).first()
+    chapter = sess.query(Chapter).filter_by(chapter_id=request.form['chapter_id']).one()
     question.chapter = chapter
     sess.add(question)
     sess.commit()
@@ -200,17 +209,58 @@ def admin_question_new():
     json_item.status_code = 500
     return json_item
 
-@app.route('/admin/questions/edit/<int:id>')
+@app.route('/admin/questions/edit/<int:id>', methods=['GET', 'POST'])
 @require_admin_auth
 def admin_question_edit(id):
-  return ""
+  sess = Session()
+  try:
+    question = sess.query(Question).filter_by(id=id).one()
+    if request.method == 'GET':
+      return render_template('admin/questions/edit.html',
+                             area='question/edit',
+                             question=question,
+                             unescape=unescape)
+    else:
+      try:
+        question.question = request.form['question']
+        question.answer = request.form['answer']
+        question.type = request.form['type']
+        question.hint = request.form['hint']
+
+        if (request.form['question'] == '') or (request.form['answer'] == ''):
+          raise Exception()
+
+        sess.add(question)
+        sess.commit()
+        flash('Question has been updated', 'success')
+        return redirect(url_for('admin_question_index'))
+      except Exception, e:
+        # Roll the transaction back
+        sess.rollback()
+        # Add flash by checking all possible cause that raise the exception
+        if request.form['question'] == '':
+          flash("Question can't be blank", 'error')
+        elif request.form['answer'] == '':
+          flash("Answer can't be blank", 'error')
+        else:
+          # Because now an exception isn't specific
+          # so we raise it if we don't know what it is
+          raise e
+
+        return render_template('admin/questions/edit.html',
+                              area='chapter/edit',
+                              unescape=unescape, 
+                              question=request.form)
+  except exc.NoResultFound, e:
+    flash('Unable to find given question id')
+    return redirect(url_for('admin_question_index'))
 
 @app.route('/admin/questions/delete/<int:id>')
 @require_admin_auth
 def admin_question_delete(id):
   sess = Session()
   try:
-    question = sess.query(Question).filter_by(id=id).first()
+    question = sess.query(Question).filter_by(id=id).one()
     sess.delete(question)
     sess.commit()
     flash('Question was deleted')
