@@ -7,7 +7,6 @@ import markdown
 import metalreal.database
 import metalreal.error_pages
 
-unescape = Markup
 Session = sessionmaker(bind=engine)
 
 def require_admin_auth(f):
@@ -28,8 +27,7 @@ def admin_index():
   chapters = sess.query(Chapter).order_by(Chapter.chapter_id).all()
   return render_template('admin/index.html', 
                         chapters=chapters,
-                        area='chapter',
-                        unescape=unescape)
+                        area='chapter')
 
 @app.route('/admin/chapters/new', methods=['GET', 'POST'])
 @require_admin_auth
@@ -42,7 +40,6 @@ def admin_chapter_new():
   if request.method == 'GET':
     return render_template('admin/chapters/new.html', 
                           area='chapter/new',
-                          unescape=unescape,
                           chapters=chapters)
   else:
     try:
@@ -78,8 +75,7 @@ def admin_chapter_new():
         raise e
 
       return render_template('admin/chapters/new.html',
-                            area='chapter/new', 
-                            unescape=unescape,
+                            area='chapter/new',
                             chapter=request.form,
                             chapters=chapters)
 
@@ -101,7 +97,6 @@ def admin_chapter_edit(chapter_id):
     if request.method == 'GET':
       return render_template('admin/chapters/edit.html',
                             area='chapter/edit',
-                            unescape=unescape,
                             chapter=chapter,
                             chapters=chapters,
                             required_chapters=required_chapters)
@@ -145,8 +140,7 @@ def admin_chapter_edit(chapter_id):
 
         # Render a template with previous form data is filled
         return render_template('admin/chapters/edit.html',
-                              area='chapter/edit',
-                              unescape=unescape, 
+                              area='chapter/edit', 
                               chapter=request.form,
                               chapters=chapters,
                               required_chapters=required_chapters)
@@ -180,8 +174,7 @@ def admin_question_index():
   questions = sess.query(Question).order_by(Question.id).all()
   return render_template('admin/questions/index.html',
                          area='question',
-                         questions=questions,
-                         unescape=unescape)
+                         questions=questions)
 
 @app.route('/admin/questions/new', methods=['POST'])
 @require_admin_auth
@@ -218,8 +211,7 @@ def admin_question_edit(id):
     if request.method == 'GET':
       return render_template('admin/questions/edit.html',
                              area='question/edit',
-                             question=question,
-                             unescape=unescape)
+                             question=question)
     else:
       try:
         question.question = request.form['question']
@@ -248,8 +240,7 @@ def admin_question_edit(id):
           raise e
 
         return render_template('admin/questions/edit.html',
-                              area='chapter/edit',
-                              unescape=unescape, 
+                              area='chapter/edit', 
                               question=request.form)
   except exc.NoResultFound, e:
     flash('Unable to find given question id')

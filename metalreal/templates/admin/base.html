@@ -18,14 +18,14 @@
         <div class="container">
           <a href="#" class="brand" >Metalreal</a>
           <ul class="nav" >
-            <li {{ unescape('class="active"') if 'chapter' in area }} >
+            <li {{ 'class="active"'|safe if 'chapter' in area }} >
               <a href="{{ url_for('admin_index') }}" >Chapters</a>
             </li>
-            <li {{ unescape('class="active"') if 'question' in area }} >
+            <li {{ 'class="active"'|safe if 'question' in area }} >
               <a href="{{ url_for('admin_question_index') }}" >Questions</a>
             </li>
-            <li {{ unescape('class="active"') if 'quiz' in area }} ><a href="#" >Quiz</a></li>
-            <li {{ unescape('class="active"') if 'feedback' in area }} ><a href="#" >Feedback</a></li>
+            <li {{ 'class="active"'|safe if 'quiz' in area }} ><a href="#" >Quiz</a></li>
+            <li {{ 'class="active"'|safe if 'feedback' in area }} ><a href="#" >Feedback</a></li>
           </ul >
           <ul class="nav pull-right" >
             <li><a href="{{ url_for('admin_logout') }}" >Logout</a></li>
@@ -38,20 +38,20 @@
         <ul class="nav nav-list well">
           <li class="nav-header">Actions</li>
           {% if 'chapter' in area %}
-          <li {{ unescape('class="active"') if area == 'chapter' }} >
+          <li {{ 'class="active"'|safe if area == 'chapter' }} >
             <a href="{{ url_for('admin_index') }}">
               <i class="icon-book"></i>
               Chapter List
             </a>
           </li>
-          <li {{ unescape('class="active"') if area == 'chapter/new' }} >
+          <li {{ 'class="active"'|safe if area == 'chapter/new' }} >
             <a href="{{ url_for('admin_chapter_new') }}" >
               <i class="icon-pencil"></i>
               Create new chapter
             </a>
           </li>
           {% elif 'question' in area %}
-          <li {{ unescape('class="active"') if area == 'question' }} >
+          <li {{ 'class="active"'|safe if area == 'question' }} >
             <a href="{{ url_for('admin_question_index') }}">
               <i class="icon-book"></i>
               Question List
